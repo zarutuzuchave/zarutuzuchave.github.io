@@ -1,0 +1,45 @@
+type User @table {
+  uid: String!
+  displayName: String!
+  zipCode: String!
+  phoneNumber: String
+  bio: String
+  reputationScore: Int
+}
+
+type Listing @table {
+  title: String!
+  description: String!
+  category: String!
+  status: String!
+  imageUrl: String
+  expiryDate: Date
+  owner: User!
+}
+
+type Request @table {
+  title: String!
+  description: String!
+  status: String!
+  rewardDescription: String
+  locationNotes: String
+  requester: User!
+}
+
+type Message @table {
+  content: String!
+  timestamp: Timestamp!
+  attachmentUrl: String
+  sender: User!
+  receiver: User!
+  listing: Listing
+  request: Request
+}
+
+type Review @table {
+  rating: Int!
+  comment: String!
+  helpfulnessTags: String
+  target: User!
+  author: User!
+}

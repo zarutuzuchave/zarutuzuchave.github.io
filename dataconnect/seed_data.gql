@@ -1,0 +1,26 @@
+mutation CreateSeedData @transaction {
+  user_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      uid: "user_a",
+      displayName: "Alice",
+      zipCode: "90210"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      uid: "user_b",
+      displayName: "Bob",
+      zipCode: "10001"
+    }
+  ])
+  listing_insertMany(data: [
+    {
+      id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+      title: "Vintage Camera",
+      description: "A beautiful film camera from the 70s.",
+      category: "Electronics",
+      status: "Available",
+      ownerId: "550e8400-e29b-41d4-a716-446655440000"
+    }
+  ])
+}

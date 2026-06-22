@@ -1,0 +1,20 @@
+mutation CreateUser($uid: String!, $displayName: String!, $zipCode: String!) @auth(level: PUBLIC) {
+  user_insert(data: { uid: $uid, displayName: $displayName, zipCode: $zipCode })
+}
+
+mutation CreateListing($title: String!, $description: String!, $category: String!, $status: String!, $ownerId: UUID!) @auth(level: USER) {
+  listing_insert(data: { title: $title, description: $description, category: $category, status: $status, ownerId: $ownerId })
+}
+
+query GetUserListings($ownerId: UUID!) @auth(level: USER) {
+  listings(where: { ownerId: { eq: $ownerId } }) {
+    title
+    description
+    category
+    status
+  }
+}
+
+mutation SendMessage($content: String!, $senderId: UUID!, $receiverId: UUID!, $listingId: UUID!) @auth(level: USER) {
+  message_insert(data: { content: $content, senderId: $senderId, receiverId: $receiverId, listingId: $listingId, timestamp_expr: "request.time" })
+}
