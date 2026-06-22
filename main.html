@@ -6,7 +6,6 @@
   <title>Ana & Filipe 💜</title>
   <link rel="stylesheet" href="index.html">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="animation.js">
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
@@ -31,12 +30,21 @@
       <span class="logo-heart">💗</span>
     </div>
 
-    <div class="search-wrap">
-      <div class="search-bar">
-        <span class="search-icon">🔍</span>
-        <input type="text" placeholder="Pesquisar com amor…" />
-        <span>💜</span>
-      </div>
+<div class="search-wrap">
+    <div class="search-bar">
+        <span class="search-icon" onclick="realizarPesquisa()" style="cursor: pointer;">🔍</span>
+        
+        <div class="sua-div-de-pesquisa" style="display: flex; align-items: center; width: 100%;">
+            
+            <input type="text" id="campo-pesquisa" placeholder="Pesquise no Google" style="flex: 1;">
+            
+            <span>💜</span>
+            
+        </div>  
+    </div>
+</div>
+<script src="animation.js"></script>
+
       <div class="btn-row">
         <a href="timeline.html">
           <button class="btn btn-primary">💗 Timeline </button>

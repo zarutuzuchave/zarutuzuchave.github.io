@@ -13,23 +13,23 @@ for (let i = 0; i < 28; i++) {
   heartBg.appendChild(span);
 }
 
-// Lista de surpresas românticas para o botão "Surpresa!"
-const surpresas = [
-  'Você é incrível, Ana! 💜',
-  'Te amo muito! 💗',
-  'Você ilumina meu dia! ✨',
-  'Meu coração é seu! 💖',
-  'Feliz por ter você! 🌸'
-];
+// Função que é chamada quando clica no botão ou na lupa
+function realizarPesquisa() {
+    // Pega o valor exato que o usuário digitou na sua div
+    const termo = document.getElementById('campo-pesquisa').value;
+    
+    // Confere se o usuário não deixou em branco
+    if (termo.trim() !== '') {
+        // Cria o link de pesquisa do Google
+        const urlGoogle = 'https://www.google.com/search?q=' + encodeURIComponent(termo);
+        // Muda a página para o Google
+        window.location.href = urlGoogle;
+    }
+}
 
-// O que acontece quando clica no botão surpresa
-document.querySelector('.btn-secondary').addEventListener('click', () => {
-  alert(surpresas[Math.floor(Math.random() * surpresas.length)]);
-});
-
-// O que acontece ao digitar na pesquisa e dar Enter
-document.querySelector('input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    alert(`Pesquisando "${e.target.value}" com muito amor! 💜`);
-  }
+// Configuração extra: permite que a pesquisa aconteça ao apertar a tecla "Enter"
+document.getElementById('campo-pesquisa').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        realizarPesquisa();
+    }
 });
