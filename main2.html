@@ -143,6 +143,12 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
     .delete-btn:hover { background: rgba(200, 20, 20, 1); transform: scale(1.1); }
+    
+    /* NOVA REGRA: Esconder lixeira nas fotos fixas */
+    .carousel-slide.is-fixed .delete-btn {
+        display: none;
+    }
+
     .no-photos {
       color: #aaa;
       font-style: italic;
@@ -224,10 +230,7 @@
       <div class="carousel-view">
         <button class="nav-btn prev-btn" id="prevBtn">❮</button>
         <div class="carousel-track" id="carouselTrack">
-          <div class="carousel-slide active">
-            <div class="no-photos">Nenhuma foto adicionada ainda. Clique abaixo para começar! 🌸</div>
           </div>
-        </div>
         <button class="nav-btn next-btn" id="nextBtn">❯</button>
       </div>
       <div class="actions-row">
@@ -239,6 +242,7 @@
   </div>
 
   <script>
+    // Fundo de corações
     const heartBg = document.getElementById('heartBg');
     const symbols = ['💜','💗','💕','💖','💓','🌸','✨','💝'];
     for (let i = 0; i < 30; i++) {
@@ -251,6 +255,7 @@
       heartBg.appendChild(span);
     }
 
+    // Navegação entre telas
     const screen1 = document.getElementById('screen1');
     const screen2 = document.getElementById('screen2');
     document.getElementById('enterBtn').addEventListener('click', () => {
@@ -262,42 +267,90 @@
       screen1.classList.add('active');
     });
 
+    // Lógica do Carrossel
     const fileInput = document.getElementById('fileInput');
     const uploadBtn = document.getElementById('uploadBtn');
     const carouselTrack = document.getElementById('carouselTrack');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
-    let photos = [];
+   
+    const fixedPhotos = [
+      "C:/Users/Filipe Silva/Documents/Pagina-Google/WhatsApp Image 2026-06-22 at 12.57.33.jpeg",
+      "C:/Users/Filipe Silva/Documents/Pagina-Google/WhatsApp Image 2026-06-22 at 12.57.42.jpeg",
+      "C:/Users/Filipe Silva/Documents/Pagina-Google/WhatsApp Image 2026-06-22 at 12.58.00.jpeg",
+      "C:/Users/Filipe Silva/Documents/Pagina-Google/WhatsApp Image 2026-06-22 at 12.58.32.jpeg",
+      "C:/Users/Filipe Silva/Documents/Pagina-Google/WhatsApp Image 2026-06-22 at 12.58.49.jpeg",
+      "C:/Users/Filipe Silva/Documents/Pagina-Google/WhatsApp Image 2026-06-22 at 12.58.57.jpeg",
+      "C:/Users/Filipe Silva/Documents/Pagina-Google/WhatsApp Image 2026-06-22 at 12.59.11.jpeg",
+    ];
+
+    // Array que guardará apenas as fotos que o usuário adicionar
+    let uploadedPhotos = []; 
+    
+    // Índice atual do carrossel
     let currentIndex = 0;
 
+    // Inicializa o carrossel na primeira vez
+    updateCarousel();
+
+    // Botão de upload
     uploadBtn.addEventListener('click', () => fileInput.click());
 
+    // Trata o upload de novas fotos
     fileInput.addEventListener('change', (e) => {
       const files = e.target.files;
+      let filesToRead = files.length;
+      
+      if (filesToRead === 0) return;
+
       for (let i = 0; i < files.length; i++) {
         const reader = new FileReader();
         reader.onload = function(event) {
-          photos.push(event.target.result);
-          if (photos.length === 1) currentIndex = 0;
-          updateCarousel();
+          // Adiciona a nova foto ao array de uploads
+          uploadedPhotos.push(event.target.result);
+          
+          filesToRead--;
+          // Quando terminar de ler todas as fotos enviadas
+          if (filesToRead === 0) {
+            // Vai para a primeira foto nova adicionada (índice após as fixas)
+            currentIndex = fixedPhotos.length + (uploadedPhotos.length - files.length);
+            updateCarousel();
+          }
         };
         reader.readAsDataURL(files[i]);
       }
+      // Limpa o input para permitir subir a mesma foto novamente se quiser
       fileInput.value = '';
     });
 
-    function deletePhoto(index) {
-      photos.splice(index, 1);
-      if (photos.length === 0) { currentIndex = 0; }
-      else if (currentIndex >= photos.length) { currentIndex = photos.length - 1; }
+    // Função para deletar foto (apenas uploads)
+    function deletePhoto(uploadedIndex) {
+      // Remove do array de uploads usando o índice corrigido
+      uploadedPhotos.splice(uploadedIndex, 1);
+      
+      const totalPhotos = fixedPhotos.length + uploadedPhotos.length;
+
+      // Ajusta o índice atual para não ficar em branco
+      if (totalPhotos === 0) {
+        currentIndex = 0;
+      } else if (currentIndex >= totalPhotos) {
+        currentIndex = totalPhotos - 1;
+      }
+      
       updateCarousel();
     }
 
+    // Função principal que desenha o carrossel
     function updateCarousel() {
       carouselTrack.innerHTML = '';
 
-      if (photos.length === 0) {
+      // Combina os dois arrays para exibição
+      const allPhotos = [...fixedPhotos, ...uploadedPhotos];
+      const totalPhotos = allPhotos.length;
+
+      // Se não houver foto nenhuma (nem fixa, nem upload)
+      if (totalPhotos === 0) {
         carouselTrack.innerHTML = `
           <div class="carousel-slide active">
             <div class="no-photos">Nenhuma foto adicionada ainda. Clique abaixo para começar! 🌸</div>
@@ -305,48 +358,63 @@
         return;
       }
 
-      if (currentIndex >= photos.length) currentIndex = 0;
-      if (currentIndex < 0) currentIndex = photos.length - 1;
+      // Garante que o índice está dentro dos limites
+      if (currentIndex >= totalPhotos) currentIndex = 0;
+      if (currentIndex < 0) currentIndex = totalPhotos - 1;
 
-      photos.forEach((photoUrl, index) => {
+      // Cria os slides HTML
+      allPhotos.forEach((photoUrl, index) => {
+        const isFixed = index < fixedPhotos.length;
+        
         const slide = document.createElement('div');
-        slide.className = `carousel-slide ${index === currentIndex ? 'active' : ''}`;
+        // Adiciona classe 'active' se for a foto atual e 'is-fixed' se for fixa
+        slide.className = `carousel-slide ${index === currentIndex ? 'active' : ''} ${isFixed ? 'is-fixed' : ''}`;
 
         const img = document.createElement('img');
         img.src = photoUrl;
         img.alt = `Momento ${index + 1}`;
-
-        const delBtn = document.createElement('button');
-        delBtn.className = 'delete-btn';
-        delBtn.innerHTML = '🗑️';
-        delBtn.title = 'Excluir foto';
-        delBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          deletePhoto(index);
-        });
-
         slide.appendChild(img);
-        slide.appendChild(delBtn);
+
+        // Só adiciona botão de deletar se NÃO for fixa
+        if (!isFixed) {
+          const delBtn = document.createElement('button');
+          delBtn.className = 'delete-btn';
+          delBtn.innerHTML = '🗑️';
+          delBtn.title = 'Excluir foto';
+          
+          // Calcula o índice real dentro do array uploadedPhotos
+          const uploadedIndex = index - fixedPhotos.length;
+          
+          delBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Impede bugar o clique no slide
+            deletePhoto(uploadedIndex);
+          });
+          slide.appendChild(delBtn);
+        }
+
         carouselTrack.appendChild(slide);
       });
 
-      // Contador
+      // Cria/Atualiza o Contador
       const counter = document.createElement('div');
       counter.className = 'photo-counter';
-      counter.textContent = `${currentIndex + 1} / ${photos.length}`;
+      counter.textContent = `${currentIndex + 1} / ${totalPhotos}`;
       carouselTrack.appendChild(counter);
     }
 
+    // Botões de navegação
     nextBtn.addEventListener('click', () => {
-      if (photos.length > 0) {
-        currentIndex = (currentIndex + 1) % photos.length;
+      const totalPhotos = fixedPhotos.length + uploadedPhotos.length;
+      if (totalPhotos > 0) {
+        currentIndex = (currentIndex + 1) % totalPhotos;
         updateCarousel();
       }
     });
 
     prevBtn.addEventListener('click', () => {
-      if (photos.length > 0) {
-        currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+      const totalPhotos = fixedPhotos.length + uploadedPhotos.length;
+      if (totalPhotos > 0) {
+        currentIndex = (currentIndex - 1 + totalPhotos) % totalPhotos;
         updateCarousel();
       }
     });
