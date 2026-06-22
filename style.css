@@ -1,0 +1,142 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --pink-light: #fce4ec;
+  --pink:       #f48fb1;
+  --pink-dark:  #e91e8c;
+  --purple:     #9c27b0;
+  --purple-dark:#6a1b9a;
+  --lavender:   #f3e5f5;
+  --white:      #ffffff;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--lavender);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── Fundo estático de corações grandes ── */
+.static-hearts { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.static-hearts span { position: absolute; font-size: 0; opacity: 0.08; line-height: 1; }
+.sh1  { top:  4%; left:  3%;  font-size: 9rem  !important; transform: rotate(-20deg); }
+.sh2  { top: 10%; right: 4%;  font-size: 7rem  !important; transform: rotate(15deg); }
+.sh3  { top: 40%; left: -1%; font-size: 11rem !important; transform: rotate(-10deg); }
+.sh4  { top: 60%; right: 2%;  font-size: 8rem  !important; transform: rotate(20deg); }
+.sh5  { bottom: 5%;  left:  8%; font-size: 10rem !important; transform: rotate(-15deg); }
+.sh6  { bottom: 8%;  right: 6%; font-size: 8rem  !important; transform: rotate(10deg); }
+.sh7  { top: 30%; left: 40%; font-size: 13rem !important; transform: rotate(-5deg);  opacity: 0.05 !important; }
+.sh8  { top: 72%; left: 25%; font-size: 7rem  !important; transform: rotate(12deg); }
+.sh9  { top: 18%; left: 28%; font-size: 6rem  !important; transform: rotate(-8deg);  opacity: 0.06 !important; }
+.sh10 { bottom: 20%; right: 28%; font-size: 9rem !important; transform: rotate(18deg); opacity: 0.06 !important; }
+
+/* ── Fundo animado de corações flutuantes ── */
+.heart-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.heart-bg span { position: absolute; bottom: -60px; animation: floatUp linear infinite; opacity: 0; font-size: 1.4rem; user-select: none; }
+
+@keyframes floatUp {
+  0%   { transform: translateY(0) rotate(-15deg); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-110vh) rotate(15deg); opacity: 0; }
+}
+
+/* ── Cabeçalho ── */
+header {
+  position: relative; z-index: 10;
+  display: flex; justify-content: center; align-items: center;
+  padding: 18px 28px;
+}
+
+/* ── Efeito pulsar no coração do canto ── */
+.corner-heart { font-size: 1.6rem; animation: pulse 1.8s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.25); } }
+
+/* ── Conteúdo Principal ── */
+main {
+  position: relative; z-index: 10;
+  display: flex; flex-direction: column; align-items: center;
+  padding-top: 60px;
+}
+
+/* ── Estilo do Logo ── */
+.logo {
+  font-family: 'Pacifico', cursive;
+  font-size: clamp(2.8rem, 8vw, 5.2rem);
+  line-height: 1; margin-bottom: 36px;
+  display: flex; align-items: center; gap: 12px;
+  animation: fadeDown .7s ease both;
+}
+
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeUp   { from { opacity: 0; transform: translateY(20px);  } to { opacity: 1; transform: translateY(0); } }
+
+.logo-heart { animation: pulse 1.4s ease-in-out infinite; font-size: clamp(2rem,6vw,4rem); }
+.logo-text {
+  background: linear-gradient(135deg, var(--pink-dark), var(--purple));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 2px 6px rgba(156,39,176,.25));
+}
+
+/* ── Barra de Busca ── */
+.search-wrap { width: min(580px, 90vw); animation: fadeUp .7s .15s ease both; }
+.search-bar {
+  display: flex; align-items: center;
+  background: var(--white); border: 2px solid var(--pink);
+  border-radius: 999px; padding: 12px 20px; gap: 10px;
+  box-shadow: 0 4px 20px rgba(233,30,140,.15);
+  transition: box-shadow .25s, border-color .25s;
+}
+.search-bar:focus-within { box-shadow: 0 6px 28px rgba(233,30,140,.3); border-color: var(--purple); }
+.search-bar input { flex: 1; border: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 1rem; color: #4a154b; background: transparent; }
+.search-bar input::placeholder { color: #c48fd8; }
+.search-icon { font-size: 1.2rem; color: var(--pink-dark); }
+
+/* ── Botões ── */
+.btn-row { margin-top: 22px; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; animation: fadeUp .7s .3s ease both; }
+.btn {
+  font-family: 'Nunito', sans-serif; font-size: .9rem; font-weight: 700;
+  padding: 10px 22px; border-radius: 999px; border: none; cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,.15); }
+.btn:active { transform: translateY(0); }
+.btn-primary { background: linear-gradient(135deg, var(--pink-dark), var(--purple)); color: var(--white); }
+.btn-secondary { background: var(--white); color: var(--purple-dark); border: 2px solid var(--pink); }
+
+/* ── Botão Ana e Filipe ── */
+.btn-couple {
+  margin-top: 28px;
+  font-family: 'Pacifico', cursive;
+  font-size: 1.1rem;
+  padding: 14px 36px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--pink-dark), var(--purple-dark));
+  color: var(--white);
+  box-shadow: 0 4px 20px rgba(233,30,140,.35);
+  text-decoration: none;
+  display: inline-block;
+  animation: fadeUp .7s .4s ease both;
+  transition: transform .2s, box-shadow .2s;
+  letter-spacing: .5px;
+}
+.btn-couple:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 28px rgba(233,30,140,.5); }
+
+/* ── Links rápidos ── */
+.quick-links { margin-top: 48px; display: flex; gap: 28px; flex-wrap: wrap; justify-content: center; animation: fadeUp .7s .55s ease both; }
+.quick-link { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; transition: transform .2s; }
+.quick-link:hover { transform: translateY(-4px); }
+.ql-icon {
+  width: 56px; height: 56px; border-radius: 16px;
+  background: var(--white); border: 2px solid var(--pink-light);
+  display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+  box-shadow: 0 2px 10px rgba(233,30,140,.12);
+}
+.ql-label { font-size: .78rem; font-weight: 600; color: var(--purple-dark); }
+
+/* ── Rodapé ── */
+footer { position: relative; z-index: 10; margin-top: 60px; text-align: center; color: var(--purple); font-size: .85rem; padding-bottom: 20px; font-weight: 600; }
